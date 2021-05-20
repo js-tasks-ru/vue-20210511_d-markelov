@@ -44,4 +44,71 @@ const agendaItemIcons = {
   other: 'cal-sm',
 };
 
-// Требуется создать Vue приложение
+const app = new Vue({
+  data() {
+    return {
+      rawMeetup: null,
+    };
+  },
+
+  computed: {
+    meetup() {
+      return {
+        ...this.rawMeetup,
+        localDate: this.rawMeetup.date
+          ? new Date(this.rawMeetup.date).toLocaleString(navigator.language, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })
+          : 'Дата станет известна позже',
+
+        backgroundImg: this.rawMeetup.imageId
+          ? `--bg-url:url('https://course-vue.javascript.ru/api/images/${this.rawMeetup.imageId}')`
+          : '',
+
+        refinedAgenda: this.rawMeetup?.agenda.map((agenda) => {
+          return {
+            ...agenda,
+            title: agenda.title ? agenda.title : agendaItemDefaultTitles[agenda.type],
+            icon: `/assets/icons/icon-${agendaItemIcons[agenda.type]}.svg`,
+          };
+        }),
+      };
+    },
+  },
+
+  created() {
+    this.getMetupInfo(1);
+    console.log('cr: ', new Date().getUTCSeconds(), new Date().getMilliseconds());
+  },
+
+  methods: {
+    async getMetupInfo(id) {
+      try {
+        const url = `https://course-vue.javascript.ru/api/meetups/${id}`;
+        await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            this.rawMeetup = data;
+          });
+      } catch (e) {
+        if (e.response) {
+          console.log('Server Error: ', e);
+        } else if (e.request) {
+          console.log('Network Error: ', e);
+        } else {
+          console.log('Client Error: ', e);
+        }
+      }
+    },
+  },
+
+  template: `#app`,
+});
+
+app.$mount('#app');
