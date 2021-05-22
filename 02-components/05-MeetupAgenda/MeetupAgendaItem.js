@@ -13,7 +13,6 @@ const MeetupAgendaItem = {
   computed: {
     refinedAgendaItem() {
       return {
-        ...this.agendaItem,
         title: this.agendaItem.title ? this.agendaItem.title : agendaItemDefaultTitles[this.agendaItem.type],
         icon: `/assets/icons/icon-${agendaItemIcons[this.agendaItem.type]}.svg`,
       };
@@ -25,15 +24,15 @@ const MeetupAgendaItem = {
         <div class="meetup-agenda__item-col">
           <img class="icon" alt="icon" :src="refinedAgendaItem.icon" />
         </div>
-        <div class="meetup-agenda__item-col">{{refinedAgendaItem.startsAt}} - {{refinedAgendaItem.endsAt}}</div>
+        <div class="meetup-agenda__item-col">{{agendaItem.startsAt}} - {{agendaItem.endsAt}}</div>
         <div class="meetup-agenda__item-col">
           <h5 class="meetup-agenda__title">{{refinedAgendaItem.title}}</h5>
-          <p v-if="refinedAgendaItem.type === 'talk'">
-            <span>{{refinedAgendaItem.speaker}}</span>
+          <p v-if="agendaItem.type === 'talk'">
+            <span>{{agendaItem.speaker}}</span>
             <span class="meetup-agenda__dot"></span>
-            <span class="meetup-agenda__lang">{{refinedAgendaItem.language}}</span>
+            <span class="meetup-agenda__lang">{{agendaItem.language}}</span>
           </p>
-          <p v-if="refinedAgendaItem.description">{{refinedAgendaItem.description}}</p>
+          <p v-if="agendaItem.description">{{agendaItem.description}}</p>
         </div>
     </div>`,
 };

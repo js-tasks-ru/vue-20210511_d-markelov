@@ -1,6 +1,12 @@
 const CounterButton = {
   name: 'CounterButton',
 
+
+  model: {
+    prop: 'count',
+    event: 'click'
+  },
+
   props: {
     count: {
       type: Number,
@@ -8,13 +14,10 @@ const CounterButton = {
     },
   },
 
-  methods: {
-    increment() {
-      this.$emit('increment', this.count + 1);
-    },
-  },
-
-  template: `<button @click="increment()" type="button">{{ count }}</button>`,
+  template: `<button 
+    :value="count"
+    @click="$emit('increment', count + 1)"
+    type="button">{{ count }}</button>`,
 };
 
 export default CounterButton;
