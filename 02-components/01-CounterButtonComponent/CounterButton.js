@@ -4,7 +4,7 @@ const CounterButton = {
 
   model: {
     prop: 'count',
-    event: 'click'
+    event: 'increment'
   },
 
   props: {

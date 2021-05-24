@@ -23,7 +23,7 @@ const MeetupView = {
 
   computed:{
     bg(){
-      return getImageUrlByImageId(this.meetup?.imageId);
+      return this.meetup.imageId ? getImageUrlByImageId(this.meetup.imageId) : null;
     },
     dt(){
       return new Date(this.meetup?.date);

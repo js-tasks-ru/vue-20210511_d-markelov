@@ -60,9 +60,9 @@ const MeetupsCalendar = {
     <div class="rangepicker__calendar">
       <div class="rangepicker__month-indicator">
         <div class="rangepicker__selector-controls">
-          <button class="rangepicker__selector-control-left" v-on:click="changeMonth(-1)"></button>
+          <button class="rangepicker__selector-control-left" @click="changeMonth(-1)"></button>
           <div>{{dateString}}</div>
-          <button class="rangepicker__selector-control-right" v-on:click="changeMonth(1)"></button>
+          <button class="rangepicker__selector-control-right" @click="changeMonth(1)"></button>
         </div>
       </div>
       <div class="rangepicker__date-grid">
