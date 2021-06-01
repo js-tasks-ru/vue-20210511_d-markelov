@@ -46,4 +46,20 @@ export const router = new VueRouter({
       ],
     },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else if (
+      to.matched.some((route) => route.meta.saveScrollPosition) &&
+      from.matched.some((route) => route.meta.saveScrollPosition)
+    ) {
+      return false;
+    } else if (to.hash) {
+      return {
+        selector: to.hash,
+      };
+    } else {
+      return { x: 0, y: 0 };
+    }
+  },
 });
