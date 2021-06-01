@@ -1,9 +1,21 @@
 import VueRouter from 'vue-router';
+import LoginPage from '../views/LoginPage';
+import RegisterPage from '../views/RegisterPage';
 
 export const routes = [
   {
     path: '/',
     component: () => import('../views/IndexPage'),
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: RegisterPage,
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginPage,
   },
 ];
 
