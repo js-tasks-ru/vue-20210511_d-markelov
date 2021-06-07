@@ -49,7 +49,7 @@ export default {
   watch: {
     meetupsViewProps: {
       handler: function () {
-        this.$router.push({ path: '/', query: this.navQuery }).catch((err) => {
+        this.$router.push({ query: this.navQuery }).catch((err) => {
           if (err.name != 'NavigationDuplicated') {
             throw err;
           }
@@ -65,11 +65,8 @@ export default {
       },
 
       deep: true,
+      immediate: true,
     },
-  },
-
-  mounted(){
-    this.updQuery();
   },
 
   methods: {
