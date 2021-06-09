@@ -1,10 +1,25 @@
 <template>
-  <button></button>
+  <base-button class="button_primary" :tag="tag" :block="block" v-bind="$attrs" v-on="$listeners"><slot /></base-button>
 </template>
 
 <script>
+import BaseButton from './BaseButton.vue';
 export default {
   name: 'PrimaryButton',
+
+  components: {
+    BaseButton,
+  },
+
+  inheritAttrs: false,
+
+  props: {
+    block: Boolean,
+    tag: {
+      type: String,
+      default: 'button',
+    },
+  },
 };
 </script>
 
