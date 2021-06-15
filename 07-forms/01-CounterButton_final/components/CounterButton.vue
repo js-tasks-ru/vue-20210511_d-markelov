@@ -5,7 +5,7 @@
 <script>
 export default {
   name: 'CounterButton',
-
+  
   model: {
     prop: 'count',
     event: 'increment',
