@@ -14,7 +14,7 @@ import MessagesList from './MessegesList';
 let id = 0;
 
 // Раскомментируйте эту строку
-// export const TASK_SOLVED = true;
+export const TASK_SOLVED = true;
 
 export default {
   name: 'MiniMessenger',
@@ -33,6 +33,10 @@ export default {
     };
   },
 
+  updated() {
+    this.$nextTick(this.scrollToEnd());
+  },
+
   methods: {
     send() {
       this.messages.push({
@@ -40,6 +44,11 @@ export default {
         text: this.newMessage,
       });
       this.newMessage = '';
+    },
+
+    scrollToEnd: function () {
+      let el = this.$el.querySelector('.messages');
+      el.scrollTop = el.scrollHeight;
     },
   },
 };
