@@ -1,42 +1,51 @@
 <template>
-  <form class="form meetup-form">
+  <form class="form meetup-form" @submit.prevent="submit">
     <div class="meetup-form__content">
       <fieldset class="form-section">
         <div class="form-group">
           <label>Название</label>
-          <input class="form-control" />
+          <app-input v-model="localMeetup.title" />
         </div>
         <div class="form-group">
           <label>Дата</label>
-          <input class="form-control" type="date" />
+          <date-input v-model="localMeetup.date" type="date" />
         </div>
         <div class="form-group">
           <label>Место</label>
-          <input class="form-control" />
+          <app-input v-model="localMeetup.place" />
         </div>
         <div class="form-group">
           <label>Описание</label>
-          <textarea class="form-control" rows="3"></textarea>
+          <app-input v-model="localMeetup.description" multiline rows="3" />
         </div>
         <div class="form-group">
           <label>Изображение</label>
-          <image-uploader />
+          <image-uploader v-model="localMeetup.imageId" />
         </div>
       </fieldset>
 
       <h3 class="form__section-title">Программа</h3>
-      <meetup-agenda-item-form class="mb-3" />
+      <meetup-agenda-item-form
+        v-for="(agendaItem, index) in localMeetup.agenda"
+        :key="agendaItem.id"
+        class="mb-3"
+        :agenda-item="agendaItem"
+        @update:agendaItem="updateAgendaItem(index, $event)"
+        @remove="removeAgendaItem(index)"
+      />
 
       <div class="form-section_append">
-        <button type="button" data-test="addAgendaItem">+ Добавить этап программы</button>
+        <button type="button" data-test="addAgendaItem" @click="addAgendaItem">+ Добавить этап программы</button>
       </div>
     </div>
 
     <div class="meetup-form__aside">
       <div class="meetup-form__aside_stick">
         <!-- data-test атрибуты используются для поиска нужного элемента в тестах, не удаляйте их -->
-        <button class="button button_secondary button_block" type="button" data-test="cancel">Отмена</button>
-        <button class="button button_primary button_block" type="submit" data-test="submit">Submit</button>
+        <button class="button button_secondary button_block" type="button" data-test="cancel" @click="$emit('cancel')">
+          Отмена
+        </button>
+        <button class="button button_primary button_block" type="submit" data-test="submit">{{ submitText }}</button>
       </div>
     </div>
   </form>
@@ -44,7 +53,9 @@
 
 <script>
 import MeetupAgendaItemForm from './MeetupAgendaItemForm.vue';
+import AppInput from './AppInput';
 import ImageUploader from './ImageUploader';
+import DateInput from './DateInput';
 
 let lastId = -1;
 function createAgendaItem() {
@@ -66,6 +77,48 @@ export default {
   components: {
     ImageUploader,
     MeetupAgendaItemForm,
+    AppInput,
+    DateInput,
+  },
+
+  props: {
+    meetup: {
+      type: Object,
+      required: true,
+    },
+
+    submitText: String,
+  },
+
+  data() {
+    return {
+      localMeetup: this.meetup,
+    };
+  },
+
+  methods: {
+    addAgendaItem() {
+      let item;
+      if (this.localMeetup.agenda.length > 0) {
+        item = {
+          ...createAgendaItem(),
+          startsAt: this.localMeetup.agenda[this.localMeetup.agenda.length - 1].endsAt,
+        };
+      } else item = createAgendaItem();
+      this.localMeetup.agenda.push(item);
+    },
+
+    updateAgendaItem(index, updatedItem) {
+      this.localMeetup.agenda.splice(index, 1, updatedItem);
+    },
+
+    removeAgendaItem(index) {
+      this.localMeetup.agenda.splice(index, 1);
+    },
+
+    submit() {
+      this.$emit('submit', this.localMeetup);
+    },
   },
 };
 </script>
