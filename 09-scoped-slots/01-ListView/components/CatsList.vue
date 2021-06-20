@@ -1,22 +1,19 @@
 <template>
   <list-view :items="cats">
-    <!--
-    "X" - некоторый элемент списка, полученный из параметров слота.
-    Имя параметра выберите сами и замените X на него в коде ниже.
-
-    <list-view-card
-      :key="X.id"
-      tag="article"
-      :title="X.title"
-      :cover="X.cover"
-    >
-      <ul class="info-list">
-        <li>{{ X.description }}</li>
-        <li>Cute cat</li>
-        <li>Cats are always cute</li>
-      </ul>
-    </list-view-card>
-    -->
+    <template #default="slotProps">
+      <list-view-card
+        :key="slotProps.item.id"
+        tag="article"
+        :title="slotProps.item.title"
+        :cover="slotProps.item.cover"
+      >
+        <ul class="info-list">
+          <li>{{ slotProps.item.description }}</li>
+          <li>Cute cat</li>
+          <li>Cats are always cute</li>
+        </ul>
+      </list-view-card>
+    </template>
   </list-view>
 </template>
 
