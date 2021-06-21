@@ -1,11 +1,30 @@
 <template>
   <div
     class="input-group"
-    :class="{ 'input-group_icon': !!$slots['left-icon'], 'input-group_icon-left': !!$slots['left-icon'] }"
+    :class="{
+      'input-group_icon': hasLeftIcon || hasRightIcon,
+      'input-group_icon-left': hasLeftIcon,
+      'input-group_icon-right': hasRightIcon,
+    }"
   >
     <slot name="left-icon" />
-    <textarea v-if="multiline" class="form-control" :value="value" v-bind="$attrs" v-on="listeners"></textarea>
-    <input v-else class="form-control" :value="value" v-bind="$attrs" v-on="listeners" />
+
+    <component
+      :is="multiline ? 'textarea' : 'input'"
+      ref="input"
+      class="form-control"
+      :class="{
+        'form-control_rounded': rounded,
+        'form-control_sm': small,
+      }"
+      v-bind="$attrs"
+      :value.prop="value"
+      @input="$emit('input', $event.target.value)"
+      @change="$emit('change', $event.target.value)"
+      v-on="listeners"
+    />
+
+    <slot name="right-icon" />
   </div>
 </template>
 
@@ -21,18 +40,36 @@ export default {
   },
 
   props: {
-    value: String,
+    small: Boolean,
+    rounded: Boolean,
     multiline: Boolean,
+    value: String,
+  },
+
+  data() {
+    return {
+      hasLeftIcon: false,
+      hasRightIcon: false,
+    };
   },
 
   computed: {
-    listeners() {
-      return {
-        ...this.$listeners,
-        input: ($event) => this.$emit('input', $event.target.value),
-        change: ($event) => this.$emit('change', $event.target.value),
-      };
-    },
+    listeners(){
+      let listeners = { ... this.$listeners };
+      delete listeners.input;
+      delete listeners.change;
+      return listeners;
+    }
+  },
+
+  mounted() {
+    this.hasLeftIcon = !!this.$slots['left-icon'];
+    this.hasRightIcon = !!this.$slots['right-icon'];
+  },
+
+  updated() {
+    this.hasLeftIcon = !!this.$slots['left-icon'];
+    this.hasRightIcon = !!this.$slots['right-icon'];
   },
 };
 </script>
