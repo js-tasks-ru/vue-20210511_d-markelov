@@ -3,31 +3,82 @@
     <div class="rangepicker__calendar">
       <div class="rangepicker__month-indicator">
         <div class="rangepicker__selector-controls">
-          <button class="rangepicker__selector-control-left"></button>
-          <div>Январь 2021</div>
-          <button class="rangepicker__selector-control-right"></button>
+          <button class="rangepicker__selector-control-left" @click="changeMonth(-1)"></button>
+          <div>{{ dateString }}</div>
+          <button class="rangepicker__selector-control-right" @click="changeMonth(1)"></button>
         </div>
       </div>
       <div class="rangepicker__date-grid">
-        <div class="rangepicker__cell rangepicker__cell_inactive">28</div>
-        <div class="rangepicker__cell rangepicker__cell_inactive">29</div>
-        <div class="rangepicker__cell rangepicker__cell_inactive">30</div>
-        <div class="rangepicker__cell rangepicker__cell_inactive">31</div>
-        <div class="rangepicker__cell">
-          1
-          <a class="rangepicker__event">Митап</a>
-          <a class="rangepicker__event">Митап</a>
+        <div v-for="dt in daysArr" :key="dt.val" :class="dt.class">
+          {{ dt.dayOfMonth }}
+          <slot v-for="event in dt.events" :event="event" />
+          <!--          <a v-for="meetup in dt.meetups" class="rangepicker__event">{{meetup.title}}</a>-->
         </div>
-        <div class="rangepicker__cell">2</div>
-        <div class="rangepicker__cell">3</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getLocalMY, makeMonthDaysArr } from '../date.js';
+
 export default {
   name: 'CalendarView',
+
+  props: {
+    events: Array,
+  },
+
+  data() {
+    return {
+      date: new Date(),
+    };
+  },
+
+  computed: {
+    dateString() {
+      return getLocalMY(this.date);
+    },
+
+    daysArr() {
+      return makeMonthDaysArr(this.date)
+        .sort((a, b) => a.date.valueOf() - b.date.valueOf())
+        .map((dt) => {
+          return {
+            ...dt,
+            val: dt.date.valueOf(),
+            dayOfWeek: dt.date.getDay(),
+            dayOfMonth: dt.date.getDate(),
+            month: dt.date.getMonth(),
+            class: dt.inactive ? 'rangepicker__cell rangepicker__cell_inactive' : 'rangepicker__cell',
+            events: this.events
+              ? this.events.filter((event) =>
+                  !Object.keys(event).includes('month')
+                    ? new Date(
+                        new Date(event.date).getUTCFullYear(),
+                        new Date(event.date).getUTCMonth(),
+                        new Date(event.date).getUTCDate(),
+                        new Date(event.date).getUTCHours() + new Date().getTimezoneOffset() / 60,
+                      ).valueOf() ===
+                      new Date(
+                        new Date(dt.date).getUTCFullYear(),
+                        new Date(dt.date).getUTCMonth(),
+                        new Date(dt.date).getUTCDate(),
+                        new Date(dt.date).getUTCHours(),
+                      ).valueOf()
+                    : dt.date.getMonth() === event.month && dt.date.getDate() === event.date,
+                )
+              : null,
+          };
+        });
+    },
+  },
+
+  methods: {
+    changeMonth(num) {
+      this.date = new Date(this.date.getFullYear(), this.date.getMonth() + num, 1);
+    },
+  },
 };
 </script>
 
@@ -70,6 +121,7 @@ export default {
   justify-content: space-between;
   text-transform: capitalize;
 }
+
 .rangepicker__selector-controls button {
   border: none;
   padding: 0;

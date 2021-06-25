@@ -1,14 +1,11 @@
 <template>
-  <calendar-view>
+  <calendar-view v-slot="{ event }" :events="meetups">
     <!-- Каждый митап - ссылка на страницу митапа -->
     <!-- Используя слот требуется вывести список митапов дня в каждой ячейке -->
-    <!--
-    <router-link
-      :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
-      class="rangepicker__event"
-      >{{ meetup.title }}</router-link
-    >
-    -->
+
+    <router-link :to="{ name: 'meetup', params: { meetupId: event.id } }" class="rangepicker__event">{{
+      event.title
+    }}</router-link>
   </calendar-view>
 </template>
 
