@@ -12,7 +12,6 @@
         <div v-for="dt in daysArr" :key="dt.val" :class="dt.class">
           {{ dt.dayOfMonth }}
           <slot v-for="event in dt.events" :event="event" />
-          <!--          <a v-for="meetup in dt.meetups" class="rangepicker__event">{{meetup.title}}</a>-->
         </div>
       </div>
     </div>
