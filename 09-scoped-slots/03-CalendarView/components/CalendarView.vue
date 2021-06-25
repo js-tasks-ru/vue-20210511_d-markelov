@@ -78,6 +78,7 @@ export default {
       this.date = new Date(this.date.getFullYear(), this.date.getMonth() + num, 1);
     },
   },
+
 };
 </script>
 

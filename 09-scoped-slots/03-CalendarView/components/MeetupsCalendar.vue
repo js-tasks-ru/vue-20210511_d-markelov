@@ -6,6 +6,7 @@
     <router-link :to="{ name: 'meetup', params: { meetupId: event.id } }" class="rangepicker__event">{{
       event.title
     }}</router-link>
+
   </calendar-view>
 </template>
 

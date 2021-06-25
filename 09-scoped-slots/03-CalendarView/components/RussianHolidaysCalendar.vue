@@ -55,8 +55,6 @@ export default {
         { date: 4, month: 10, holiday: 'Unity Day' },
         { date: 21, month: 11, holiday: 'December Solstice' },
       ],
-
-      tmp: null,
     };
   },
 };
