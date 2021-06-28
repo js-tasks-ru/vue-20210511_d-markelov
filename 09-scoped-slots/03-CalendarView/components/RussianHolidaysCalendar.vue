@@ -1,11 +1,11 @@
 <template>
-  <calendar-view>
+  <calendar-view v-slot="{ event }" :events="russianHolidays">
     <!-- Используя слот требуется вывести список праздников соответствующего дня в каждой ячейке -->
     <!-- Каждый праздник - div.holiday -->
     <!-- Вместо 0 должен быть месяц, а вместо 1 - день, некоторым образом полученные из параметров слота -->
     <!-- Не обязательно явно передавать месяц и день, можно передать данные в любом удобном виде -->
-    <div v-for="holiday in russianHolidaysMap[0][1]" :key="holiday" class="holiday">
-      {{ holiday }}
+    <div class="holiday">
+      {{ event.holiday }}
     </div>
   </calendar-view>
 </template>
@@ -56,24 +56,6 @@ export default {
         { date: 21, month: 11, holiday: 'December Solstice' },
       ],
     };
-  },
-
-  computed: {
-    // Для удобства можно создать вычисляемое свойство, которое приводит массив с данными к удобному виду
-    // Например, здесь создаётся массив 12 объектов (под одному на каждый месяц от 0 до 11)
-    // В каждом объекте поле - это день, а значение - массив праздников в этот день
-    russianHolidaysMap() {
-      const result = Array(12).map(() => ({}));
-
-      for (const { date, month, holiday } of this.russianHolidays) {
-        if (!result[month][date]) {
-          result[month][date] = [holiday];
-        } else {
-          result[month][date].push(holiday);
-        }
-      }
-      return result;
-    },
   },
 };
 </script>
